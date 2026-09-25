@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Memoria de Cálculo Estructural - Torre Los Potocos</title>
+  <style>
+    :root {
+      --bg-color: #0f172a;
+      --card-bg: #1e293b;
+      --accent: #38bdf8;
+      --accent-glow: rgba(56, 189, 248, 0.2);
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --border: #334155;
+      --success: #4ade80;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body { background-color: var(--bg-color); color: var(--text-main); line-height: 1.6; padding: 2rem; }
+    .container { max-width: 1200px; margin: 0 auto; }
+    
+    header { text-align: center; margin-bottom: 2rem; border-bottom: 2px solid var(--border); padding-bottom: 1.5rem; }
+    header h1 { font-size: 2.3rem; color: var(--accent); margin-bottom: 0.5rem; letter-spacing: 1px; }
+    header p { color: var(--text-muted); font-size: 1.05rem; }
+    
+    .badge { background: var(--accent-glow); color: var(--accent); padding: 0.4rem 1rem; border-radius: 20px; font-size: 0.85rem; font-weight: 600; border: 1px solid var(--accent); display: inline-block; margin-top: 0.8rem; }
+
+    /* Sistema de Pestañas */
+    .tabs { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 2rem; border-bottom: 1px solid var(--border); padding-bottom: 1rem; }
+    .tab-btn { background: var(--card-bg); color: var(--text-muted); border: 1px solid var(--border); padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 0.9rem; transition: all 0.2s; }
+    .tab-btn:hover, .tab-btn.active { background: var(--accent); color: var(--bg-color); border-color: var(--accent); }
+
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
+    .card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; }
+    .card h3 { color: var(--accent); margin-bottom: 1rem; font-size: 1.2rem; display: flex; align-items: center; gap: 0.5rem; }
+    
+    ul { list-style: none; }
+    ul li { padding: 0.5rem 0; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; font-size: 0.95rem; }
+    ul li:last-child { border-bottom: none; }
+    ul li span.val { font-weight: 600; color: var(--text-main); }
+
+    .image-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(450px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
+    .img-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 1rem; text-align: center; }
+    .img-card img { max-width: 100%; height: auto; border-radius: 8px; border: 1px solid var(--border); margin-top: 0.5rem; background: #fff; }
+    .img-card p { color: var(--text-muted); font-size: 0.95rem; margin-top: 0.5rem; font-weight: 600; }
+
+    .table-container { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem; overflow-x: auto; }
+    .table-container h3 { color: var(--accent); margin-bottom: 1rem; }
+    table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.9rem; }
+    th, td { padding: 0.75rem 1rem; border-bottom: 1px solid var(--border); }
+    th { background: rgba(56, 189, 248, 0.1); color: var(--accent); font-weight: 600; }
+    tr:hover { background: rgba(255, 255, 255, 0.02); }
+
+    footer { text-align: center; color: var(--text-muted); font-size: 0.9rem; border-top: 1px solid var(--border); padding-top: 1.5rem; margin-top: 3rem; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    
+    <header>
+      <h1>TORRE LOS POTOCOS</h1>
+      <p>Memoria de Cálculo Estructural y Modelado 3D (COVENIN 1756-2001)</p>
+      <p>Diseñado y calculado en Etabs 9 por Moisés Campos</p>
+      <p>La Torre Los Potocos es una estructura metálica industrial diseñada bajo la norma sísmica           COVENIN 1756-2001</p> </p>Cuenta con pórticos espaciales y riostras orientados a soportar cargas exigentes en una zona de amenaza elevada.</p>
+      <div class="badge">Visualizador Integral de Proyecto</div>
+    </header>
+
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab(event, 'tab-espectro')">1. Espectro de diseño</button>
+      <button class="tab-btn" onclick="switchTab(event, 'tab-deriva')">2. Deriva</button>
+      <button class="tab-btn" onclick="switchTab(event, 'tab-reacciones')">3. Plano de ejes</button>
+      <button class="tab-btn" onclick="switchTab(event, 'tab-cortem')">4. Corte TON-M</button>
+      <button class="tab-btn" onclick="switchTab(event, 'tab-masas')">5. Masas MTS</button>
+      <button class="tab-btn" onclick="switchTab(event, 'tab-periodo')">6. Periodo</button>
+      <button class="tab-btn" onclick="switchTab(event, 'tab-shear')">7. Shear</button>
+      <button class="tab-btn" onclick="switchTab(event, 'tab-momento')">8. Momento</button>
+      <button class="tab-btn" onclick="switchTab(event, 'tab-3d')">9. 3D</button>
+    </div>
+
+    <!-- 1. Espectro de diseño -->
+    <div id="tab-espectro" class="tab-content active">
+      <div class="grid">
+        <div class="card">
+          <h3>⚡ Parámetros Sísmicos (COVENIN 1756)</h3>
+          <ul>
+            <li><span>Zona Sísmica:</span> <span class="val">Zona 5 (Elevado)</span></li>
+            <li><span>Aceleración Horizontal (A0):</span> <span class="val">0.30 g</span></li>
+            <li><span>Forma Espectral:</span> <span class="val">S2</span></li>
+            <li><span>Factor de Reducción (R):</span> <span class="val">4.5</span></li>
+          </ul>
+        </div>
+        <div class="img-card">
+          <p>Mapa de Zonificación Sísmica de Venezuela</p>
+          <img src="Espectro_de_diseño.png" alt="Espectro de diseño">
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. Deriva -->
+    <div id="tab-deriva" class="tab-content">
+      <div class="image-grid">
+        <div class="img-card">
+          <p>Derivas Máximas - Sismo Dirección X (SX)</p>
+          <img src="Deriva_1.png" alt="Deriva 1">
+        </div>
+        <div class="img-card">
+          <p>Derivas Máximas - Sismo Dirección Y (SY)</p>
+          <img src="Deriva_2.png" alt="Deriva 2">
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. Reacciones TON -->
+    <div id="tab-reacciones" class="tab-content">
+      <div class="image-grid">
+        <div class="img-card">
+          <p>Plano de Ejes Estructurales y Puntos de Apoyo</p>
+          <img src="Reacciones_TON.png" alt="Reacciones TON">
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. Corte TON-M -->
+    <div id="tab-cortem" class="tab-content">
+      <div class="image-grid">
+        <div class="img-card">
+          <p>Cortantes por Nivel - Dirección X (SX)</p>
+          <img src="Corte_TON-M_1.png" alt="Corte TON-M 1">
+        </div>
+        <div class="img-card">
+          <p>Cortantes por Nivel - Dirección Y (SY)</p>
+          <img src="Corte_TON-M_2.png" alt="Corte TON-M 2">
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. Masas MTS -->
+    <div id="tab-masas" class="tab-content">
+      <div class="image-grid">
+        <div class="img-card">
+          <p>Asignación de Diafragma Rígido (D1) y Excentricidad</p>
+          <img src="Masas_MTS.png" alt="Masas MTS">
+        </div>
+      </div>
+    </div>
+
+    <!-- 6. Periodo -->
+    <div id="tab-periodo" class="tab-content">
+      <div class="image-grid">
+        <div class="img-card">
+          <p>Vista de Elevación Modal - Modo 2</p>
+          <img src="Periodo_1.png" alt="Periodo 1">
+        </div>
+        <div class="img-card">
+          <p>Deformada Modal - Modo 3 (Periodo 0.329s)</p>
+          <img src="Periodo_2.png" alt="Periodo 2">
+        </div>
+        <div class="img-card">
+          <p>Deformada Modal - Modo 1 (Periodo 1.139s)</p>
+          <img src="Periodo_3.png" alt="Periodo 3">
+        </div>
+      </div>
+    </div>
+
+    <!-- 7. Shear -->
+    <div id="tab-shear" class="tab-content">
+      <div class="image-grid">
+        <div class="img-card">
+          <p>Distribución Espacial de Fuerzas Cortantes (Shear)</p>
+          <img src="Shear.png" alt="Shear">
+        </div>
+      </div>
+    </div>
+
+    <!-- 8. Momento -->
+    <div id="tab-momento" class="tab-content">
+      <div class="image-grid">
+        <div class="img-card">
+          <p>Envolvente de Momentos Flectores</p>
+          <img src="Momento.png" alt="Momento">
+        </div>
+      </div>
+    </div>
+
+    <!-- 9. 3D -->
+    <div id="tab-3d" class="tab-content">
+      <div class="image-grid">
+        <div class="img-card">
+          <p>Modelo Tridimensional Alámbrico General</p>
+          <img src="3D.png" alt="3D">
+        </div>
+      </div>
+    </div>
+
+    <script>
+      function switchTab(evt, tabId) {
+        let contents = document.getElementsByClassName("tab-content");
+        for (let c of contents) { c.classList.remove("active"); }
+        let buttons = document.getElementsByClassName("tab-btn");
+        for (let b of buttons) { b.classList.remove("active"); }
+        document.getElementById(tabId).classList.add("active");
+        evt.currentTarget.classList.add("active");
+      }
+    </script>
+
+    <footer>
+      <p>Proyecto Estructural — Torre Los Potocos | Visualizador ordenado por pestañas de Excel.</p>
+    </footer>
+
+  </div>
+</body>
+</html>
